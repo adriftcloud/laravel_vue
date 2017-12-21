@@ -15,9 +15,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Auth::routes();
+Route::get('/api/customers', 'CustomerController@search');
+Route::get('/api/products', 'ProductsController@search');
 
-Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/', 'PostController@home');
-Route::resource('posts', 'PostController');
+Route::resource('/api/invoices', 'InvoiceController');
 
