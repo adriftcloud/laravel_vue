@@ -48,6 +48,7 @@ class Invoice extends Model
         'number', 'sub_total', 'total'
     ];
 
+
     public function customer()
     {
         return $this->belongsTo(Customer::class);

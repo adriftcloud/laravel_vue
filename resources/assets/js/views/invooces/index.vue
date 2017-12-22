@@ -1,0 +1,74 @@
+<template>
+    <div class="panel">
+        <div class="panel-heading">
+            <div class="panel-title">Invoices</div>
+            <div>
+                <router-link to="/invoices/create" class="btn btn-primary">
+                    New Invoice
+                </router-link>
+            </div>
+        </div>
+        <div class="panel-body">
+            <table class="table table-link">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Data</th>
+                        <th>Number</th>
+                        <th>Customer</th>
+                        <th>Due Date</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr v-for="item in model.data" :key="item.data">
+                        <td class="w-1">{{ item.id }}</td>
+                        <td class="w-3">{{ item.date }}</td>
+                        <td class="w-3">{{ item.number }}</td>
+                        <td class="w-9">{{ item.customer.text }}</td>
+                        <td class="w-3">{{ item.due_date }}</td>
+                        <td class="w-3">{{ item.total | formatMoney }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="panel-foot"></div>
+    </div>
+</template>
+
+<script type="text/javascript">
+    import Vue from 'vue'
+
+    import {get} from '../../lib/api'
+
+    export default {
+        data() {
+            return {
+                model: {
+                    data: []
+                }
+            }
+        },
+        beforeRouteEnter(to, from, next) {
+            get('/api/invoices')
+                .then((res) => {
+                    next(vm => vm.setData(res))
+                })
+        },
+        beforeRouteUpdate(to, from, next) {
+            get('/api/invoices')
+                .then((res) => {
+                    this.setData(res)
+                    next()
+                })
+        },
+        methods: {
+            setData(res) {
+                Vue.set(this.$data, 'model', res.data.results)
+                this.page = this.model.current_page
+            }
+        }
+    }
+
+</script>

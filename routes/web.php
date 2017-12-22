@@ -12,6 +12,7 @@
 */
 
 Route::get('/', function () {
+    \Debugbar::disable();
     return view('welcome');
 });
 

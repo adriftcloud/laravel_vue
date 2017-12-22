@@ -48,12 +48,12 @@ class InvoiceController extends Controller
 
     /**
      * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
      * @throws \Exception
      * @throws \Throwable
      */
     public function store(Request $request)
     {
-
         $this->validate($request, [
             'customer_id' => 'required|integer|exists:customers,id',
             'date' => 'required|data_format:Y-m-d',
@@ -73,6 +73,7 @@ class InvoiceController extends Controller
             return $item['qty'] * $item['unit_price'];
         });
 
+
         $invoice = DB::transaction(function () use ($invoice, $request) {
             $counter = Counter::where('key', 'invoice')->first();
             $invoice->number = $counter->prefix . $counter->value;
@@ -84,6 +85,7 @@ class InvoiceController extends Controller
             $counter->incrementing('value');
             return $counter;
         });
+
 
         return response()->json(['save' => true, 'id' => $invoice->id]);
     }
@@ -110,9 +112,7 @@ class InvoiceController extends Controller
      */
     public function update($id, Request $request)
     {
-
         $invoice = Invoice::findOrFail($id);
-
 
         $this->validate($request, [
             'customer_id' => 'required|integer|exists:customers,id',
@@ -139,13 +139,18 @@ class InvoiceController extends Controller
             $invoice->updateHasMany([
                 'items' => $request->items
             ]);
-
             return $invoice;
         });
+
 
         return response()->json(['save' => true, 'id' => $invoice->id]);
     }
 
+    /**
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
     public function destroy($id)
     {
         $invoice = Invoice::findOrFail($id);
