@@ -5,8 +5,8 @@
             <div class="panel-title">{{ model.number}}</div>
             <div>
                 <router-link to="/invoices" class="btn">Back</router-link>
-                <router-link to="`/invoices/${model.id}/edit`" class="btn">Edit</router-link>
-                <button class="btn btn-error">Delete</button>
+                <router-link :to="`/invoices/${model.id}/edit`" class="btn">Edit</router-link>
+                <button class="btn btn-error" @click="deleteItem">Delete</button>
             </div>
         </div>
         <div class="panel-body">
@@ -49,7 +49,53 @@
                     </div>
                 </div>
 
+                <div class="document-body">
+                    <table class="table document-table">
+                        <thead>
+                            <tr>
+                                <th>Item Code</th>
+                                <th>Description</th>
+                                <th>Unit Price</th>
+                                <th>Qty</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
 
+                        <tbody>
+                            <tr v-for="item in model.items" :key="item.id">
+                                <td class="w-3">{{ item.product.item_code }}</td>
+                                <td class="w-12">
+                                    <pre>{{ item.product.description }}</pre>
+                                </td>
+                                <td class="w-3">{{ item.unit_price| formatMoney }}</td>
+                                <td class="'w-2">{{ item.qty }}</td>
+                                <td class="w-4">{{ item.qty*item.unit_price|formatMoney }}</td>
+                            </tr>
+                        </tbody>
+
+                        <tfoot>
+                            <tr>
+                                <td colspan="4">Sub Total</td>
+                                <td>{{ model.sub_total|formatMoney }}</td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="4">Discount</td>
+                                <td>{{ model.discount|formatMoney }}</td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="4">Grand Total</td>
+                                <td>{{ model.total|formatMoney }}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <div class="document-footer">
+                    <strong>Terms and Counditions</strong>
+                    <pre>{{ model.terms_and_conditions }}</pre>
+                </div>
             </div>
         </div>
 
@@ -88,6 +134,14 @@
             setData(res) {
                 Vue.set(this.$data, 'model', res.data.model)
                 this.show = true
+            },
+            deleteItem() {
+                byMethod('delete', `/api/invoices/${this.model.id}`)
+                    .then((res) => {
+                        if (res.data.deleted) {
+                            this.$router.push('/invoices')
+                        }
+                    })
             }
         }
     }

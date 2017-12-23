@@ -1545,7 +1545,7 @@ a.btn-primary {
 }
 
 .form-summary {
-  text-align: right;
+  text-align: right !important;
   vertical-align: middle !important;
   font-weight: bold;
 }
@@ -1635,6 +1635,7 @@ textarea.form-control {
 .typeahead-list {
   display: block;
   margin: 0;
+  padding: 0;
 }
 
 .typeahead-item {

@@ -9,7 +9,6 @@ Vue.filter('formatMoney', (value) => {
         .replace(/(\d)(?=(\d{3})+(?!\d))/g,"$1,")
 })
 
-
 const app = new Vue({
     el: '#root',
     render: h => h(App),
