@@ -106,6 +106,7 @@
     import Vue from 'vue'
     import {get, byMethod} from '../../lib/api'
 
+
     export default {
         data() {
             return {
@@ -136,12 +137,23 @@
                 this.show = true
             },
             deleteItem() {
-                byMethod('delete', `/api/invoices/${this.model.id}`)
-                    .then((res) => {
-                        if (res.data.deleted) {
-                            this.$router.push('/invoices')
-                        }
-                    })
+                this.$swal({
+                    text: '你確定要刪除嗎',
+                    type: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: '確定',
+                    cancelButtonText: '取消',
+                }).then((result) => {
+                    if (result.value) {
+
+                        byMethod('delete', `/api/invoices/${this.model.id}`)
+                            .then((res) => {
+                                if (res.data.deleted) this.$router.push('/invoices')
+                            })
+                    }
+                });
+
+
             }
         }
     }

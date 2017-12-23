@@ -34,12 +34,12 @@ class InvoiceController extends Controller
             'reference' => null,
             'discount' => 0,
             'terms_and_conditions' => 'Default Terms',
-            'items' => [
+            'items' => [[
                 'product_id' => null,
                 'product' => null,
                 'unit_price' => 0,
                 'qty' => 1
-            ]
+            ]]
         ];
 
         return response()->json(['form' => $form]);
@@ -56,8 +56,8 @@ class InvoiceController extends Controller
     {
         $this->validate($request, [
             'customer_id' => 'required|integer|exists:customers,id',
-            'date' => 'required|data_format:Y-m-d',
-            'due_date' => 'required|data_format:Y-m-d',
+            'date' => 'required|date_format:Y-m-d',
+            'due_date' => 'required|date_format:Y-m-d',
             'reference' => 'nullable|max:100',
             'discount' => 'required|numeric|min:0',
             'terms_and_conditions' => 'required|max:2000',
@@ -79,7 +79,7 @@ class InvoiceController extends Controller
             $invoice->number = $counter->prefix . $counter->value;
 
             // customer method from  app/Helper/HasManyRelation
-            $counter->storeHasMany([
+            $invoice->storeHasMany([
                 'items' => $request->items
             ]);
             $counter->incrementing('value');
