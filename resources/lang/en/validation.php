@@ -119,7 +119,8 @@ return [
     'attributes' => [
         'items.*.product_id' => 'item description',
         'items.*.unit_price' => 'unit price',
-        'items.*.qty' => 'qty'
+        'items.*.qty' => 'qty',
+        'customer_id'=>'customer'
     ],
 
 ];

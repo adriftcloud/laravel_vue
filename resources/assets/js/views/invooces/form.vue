@@ -10,6 +10,9 @@
                     <div class="form-group">
                         <label>Customer</label>
                         <typeahead :url="customerUrl" :initialize="form.customer" @input="onCustomer"/>
+                        <small class="error-control" v-if="errors.customer_id">
+                            {{ errors.customer_id[0] }}
+                        </small>
                     </div>
                 </div>
 
@@ -71,22 +74,22 @@
                         <td class="w-14">
                             <typeahead :url="productURL" :initialize="item.product" @input="onProduct(index, $event)"></typeahead>
 
-                            <small class="error-control" v-if="errors[`items.$(index).product_id`]">
-                                {{ errors[`items.$(index).product_id`][0] }}
+                            <small class="error-control" v-if="errors[`items.${index}.product_id`]">
+                                {{ errors[`items.${index}.product_id`][0] }}
                             </small>
 
                         </td>
 
                         <td class="w-4">
                             <input type="text" class="form-control" v-model="item.unit_price">
-                            <small class="error-control" v-if="errors[`items.$(index).unit_price`]">
-                                {{ errors[`items.$(index).unit_price`][0] }}
+                            <small class="error-control" v-if="errors[`items.${index}.unit_price`]">
+                                {{ errors[`items.${index}.unit_price`][0] }}
                             </small>
                         </td>
                         <td class="w-2">
                             <input type="text" class="form-control" v-model="item.qty">
-                            <small class="error-control" v-if="errors[`items.$(index).qty`]">
-                                {{ errors[`items.$(index).qty`][0] }}
+                            <small class="error-control" v-if="errors[`items.${index}.qty`]">
+                                {{ errors[`items.${index}.qty`][0] }}
                             </small>
                         </td>
                         <td class="w-4">
@@ -175,7 +178,7 @@
                 errors: {},
                 isProcessing: false,
                 show: false,
-                ressource: '/invoices',
+                resource: '/invoices',
                 store: '/api/invoices',
                 method: 'POST',
                 title: 'Create',
@@ -216,6 +219,7 @@
                     this.title = 'Edit'
                 }
                 this.show = true
+                this.$bar.finish()
             },
             addNewLine() {
                 this.form.items.push({
@@ -241,9 +245,9 @@
             },
             onCancel() {
                 if (this.$route.meta.mode === 'edit') {
-                    this.$router.push(`${this.ressource}/${this.form.id}`)
+                    this.$router.push(`${this.resource}/${this.form.id}`)
                 } else {
-                    this.$router.push(`${this.ressource}`)
+                    this.$router.push(`${this.resource}`)
                 }
             },
             onSave() {

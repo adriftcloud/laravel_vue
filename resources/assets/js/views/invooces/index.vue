@@ -78,6 +78,7 @@
             setData(res) {
                 Vue.set(this.$data, 'model', res.data.results)
                 this.page = this.model.current_page
+                this.$bar.finish()
             },
             detailsPage(item) {
                 this.$router.push(`/invoices/${item.id}`)

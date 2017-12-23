@@ -3,6 +3,12 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import swal from 'sweetalert2'
+import bar from './components/progress'
+
+router.beforeEach((to, from, next) => {
+    bar.start()
+    next()
+})
 
 Vue.filter('formatMoney', (value) => {
     return Number(value)

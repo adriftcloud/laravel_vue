@@ -78,16 +78,18 @@ class InvoiceController extends Controller
             $counter = Counter::where('key', 'invoice')->first();
             $invoice->number = $counter->prefix . $counter->value;
 
-            // customer method from  app/Helper/HasManyRelation
+            // 自訂方法於  app/Helper/HasManyRelation
             $invoice->storeHasMany([
-                'items' => $request->items
+                'items' => $request->input('items')
             ]);
-            $counter->incrementing('value');
-            return $counter;
+
+            //對欄位遞增
+            $counter->increment('value');
+            return $invoice;
         });
 
 
-        return response()->json(['save' => true, 'id' => $invoice->id]);
+        return response()->json(['saved' => true, 'id' => $invoice->id]);
     }
 
     public function show($id)
@@ -116,8 +118,8 @@ class InvoiceController extends Controller
 
         $this->validate($request, [
             'customer_id' => 'required|integer|exists:customers,id',
-            'date' => 'required|data_format:Y-m-d',
-            'due_date' => 'required|data_format:Y-m-d',
+            'date' => 'required|date_format:Y-m-d',
+            'due_date' => 'required|date_format:Y-m-d',
             'reference' => 'nullable|max:100',
             'discount' => 'required|numeric|min:0',
             'terms_and_conditions' => 'required|max:2000',
@@ -143,7 +145,7 @@ class InvoiceController extends Controller
         });
 
 
-        return response()->json(['save' => true, 'id' => $invoice->id]);
+        return response()->json(['saved' => true, 'id' => $invoice->id]);
     }
 
     /**

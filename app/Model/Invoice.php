@@ -59,8 +59,14 @@ class Invoice extends Model
         return $this->hasMany(InvoiceItem::class);
     }
 
+
+    /**
+     * 定義 sub_total 修改器
+     * @param $value
+     */
     public function setSubTotalAttribute($value)
     {
+        //設定 sub_total 欄位值
         $this->attributes['sub_total'] = $value;
         $discount = $this->attributes['discount'];
         $this->attributes['total'] = $value - $discount;

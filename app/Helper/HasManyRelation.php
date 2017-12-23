@@ -17,15 +17,17 @@ trait HasManyRelation
             }
 
             //save
-            $this->{$key}->saveMany($newItems);
+            $this->{$key}()->saveMany($newItems);
         }
     }
 
     public function updateHasMany($relations)
     {
         $this->save();
-        $parentKey = $this->getKeyName;
+        $parentKey = $this->getKeyName();
+        \Debugbar::info('$parentKey=' . $parentKey);
         $parentID = $this->getAttribute($parentKey);
+        \Debugbar::info('$parentID=' . $parentID);
 
         foreach ($relations as $key => $items) {
             $updateIds = [];
@@ -35,19 +37,25 @@ trait HasManyRelation
             foreach ($items as $item) {
                 $model = $this->{$key}()->getModel();
                 $localKey = $model->getKeyName();
+                \Debugbar::info('$localKey=' . $localKey);
                 $foreignKey = $this->{$key}()->getForeignKeyName();
+                \Debugbar::info('$foreignKey=' . $foreignKey);
 
-                if (isset($item['$foreignKey'])) {
+                if (isset($item[$localKey])) {
+                    $localId = $item[$localKey];
+                    \Debugbar::info('$localId=' . $localId);
                     $found = $model->where($foreignKey, $parentID)
                         ->where($localKey, $localId)
-                        ->frist();
+                        ->first();
 
                     if ($found) {
                         $found->fill($item);
                         $found->save();
                         $updateIds[] = $localId;
                     } else {
-                        $newItems[] = $model->fill($items);
+                        \Debugbar::info('$item');
+                        \Debugbar::info($item);
+                        $newItems[] = $model->fill($item);
                     }
                 }
             }

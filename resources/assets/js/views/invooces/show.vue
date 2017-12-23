@@ -135,6 +135,7 @@
             setData(res) {
                 Vue.set(this.$data, 'model', res.data.model)
                 this.show = true
+                this.$bar.finish()
             },
             deleteItem() {
                 this.$swal({
