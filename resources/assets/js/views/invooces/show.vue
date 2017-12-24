@@ -94,7 +94,7 @@
 
                 <div class="document-footer">
                     <strong>Terms and Counditions</strong>
-                    <pre>{{ model.terms_and_conditions }}</pre>
+                    <div v-html="model.terms_and_conditions"></div>
                 </div>
             </div>
         </div>

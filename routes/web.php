@@ -22,4 +22,3 @@ Route::get('/api/customers', 'CustomerController@search');
 Route::get('/api/products', 'ProductsController@search');
 
 Route::resource('/api/invoices', 'InvoiceController');
-

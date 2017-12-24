@@ -136,17 +136,10 @@
             <hr>
 
             <div class="row">
-                <div class="col-12">
+                <div class="col-24">
                     <div class="form-group">
                         <label>Terms and Conditions</label>
-
-                        <!--
-                        <textarea class="form-control" v-model="form.terms_and_conditions"></textarea>
-                        <typeahead :url="productURL" :initialize="item.product" @input="onProduct(index, $event)"></typeahead>
-                        -->
-
-                        <tiny-mce :value="form.terms_and_conditions" ></tiny-mce>
-
+                        <tiny-mce id="terms_and_conditions" :value="form.terms_and_conditions" v-model="form.terms_and_conditions"></tiny-mce>
                         <small class="error-control" v-if="errors.terms_and_conditions">
                             {{ errors.terms_and_conditions[0] }}
                         </small>

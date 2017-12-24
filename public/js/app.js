@@ -1754,20 +1754,20 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
             default: 'editor'
         },
         plugins: {
-            default: ''
+            default: "advlist autolink link image lists charmap print preview hr anchor pagebreak searchreplace wordcount visualblocks visualchars code insertdatetime media nonbreaking table contextmenu directionality emoticons paste textcolor responsivefilemanager"
         },
         value: {
             type: String,
             default: ''
         },
         toolbar: {
-            default: ''
+            default: "undo redo | fontsizeselect bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | styleselect forecolor backcolor table | link unlink anchor | image media | preview code "
         },
         menubar: {
-            default: ''
+            default: false
         },
         uploadDir: {
-            default: ''
+            default: '/uploads/tinymce/'
         },
         uploadBase: {
             default: '/api/upload/image'
@@ -1789,67 +1789,20 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
         var self = this;
         tinymce.baseURL = this.baseURL;
         tinymce.init(_extends({
+            relative_urls: false,
             selector: '#' + this.id,
+            language: 'zh_TW',
             toolbar: this.toolbar,
-            branding: false,
+            image_advtab: true,
             image_title: true,
-            automatic_uploads: true,
-            file_picker_types: 'image',
-            images_upload_handler: function images_upload_handler(blobInfo, success, failure) {
-                var canvas = document.createElement('canvas');
-                var context = canvas.getContext('2d');
-                var pngUrl = void 0;
-                if (blobInfo.blob()) {
-                    var temp = blobInfo.blob();
-                    var FR = new FileReader();
-                    FR.onload = function (e) {
-                        var img = new Image();
-                        img.onload = function () {
-                            canvas.width = img.width;
-                            canvas.height = img.height;
-                            context.drawImage(img, 0, 0);
-                            pngUrl = canvas.toDataURL('image/jpeg');
-
-                            __WEBPACK_IMPORTED_MODULE_0_axios___default.a.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8';
-                            var fd = new FormData();
-                            fd.append('image', pngUrl);
-                            fd.append('extension', '.jpg');
-                            __WEBPACK_IMPORTED_MODULE_0_axios___default.a.post(self.uploadBase + self.uploadDir, fd).then(function (res) {
-                                var temp = self.uploadBase + res.data;
-                                success(temp);
-                                self.$emit('input', tinymce.activeEditor.getContent());
-                            }).catch(function (error) {
-                                console.warn(error);
-                            });
-                        };
-                        img.src = e.target.result;
-                    };
-                    FR.readAsDataURL(temp);
-                }
-            },
-            file_picker_callback: function file_picker_callback(cb, value, meta) {
-                var input = document.createElement('input');
-                input.setAttribute('type', 'file');
-                input.setAttribute('accept', 'image/*');
-
-                input.onchange = function () {
-                    var file = this.files[0];
-                    var reader = new FileReader();
-                    reader.onload = function () {
-                        var id = 'blobid' + new Date().getTime();
-                        var blobCache = tinymce.activeEditor.editorUpload.blobCache;
-                        var base64 = reader.result.split(',')[1];
-                        var blobInfo = blobCache.create(id, file, base64);
-                        blobCache.add(blobInfo);
-                        cb(blobInfo.blobUri(), { title: file.name });
-                    };
-                    reader.readAsDataURL(file);
-                };
-
-                input.click();
-            },
             menubar: this.menubar,
-            plugins: ['paste', 'link', 'table', 'image', 'anchor', 'code', 'hr', 'imagetools'],
+            plugins: this.plugins,
+            external_filemanager_path: "/filemanager/",
+            filemanager_title: "檔案管理",
+            filemanager_access_key: "AaBbCc69feksjvfjedklfvmkld98",
+            external_plugins: {
+                "filemanager": "/filemanager/plugin.min.js"
+            },
             init_instance_callback: function init_instance_callback(editor) {
                 editor.on('KeyUp', function (e) {
                     _this.$emit('input', editor.getContent());
@@ -2039,13 +1992,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_api__ = __webpack_require__("./resources/assets/js/lib/api.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_typeahead__ = __webpack_require__("./resources/assets/js/components/typeahead/index.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_tinymce__ = __webpack_require__("./resources/assets/js/components/tinymce/index.js");
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -5318,7 +5264,9 @@ var render = function() {
             _c("div", { staticClass: "document-footer" }, [
               _c("strong", [_vm._v("Terms and Counditions")]),
               _vm._v(" "),
-              _c("pre", [_vm._v(_vm._s(_vm.model.terms_and_conditions))])
+              _c("div", {
+                domProps: { innerHTML: _vm._s(_vm.model.terms_and_conditions) }
+              })
             ])
           ])
         ])
@@ -6072,7 +6020,7 @@ var render = function() {
           _c("hr"),
           _vm._v(" "),
           _c("div", { staticClass: "row" }, [
-            _c("div", { staticClass: "col-12" }, [
+            _c("div", { staticClass: "col-24" }, [
               _c(
                 "div",
                 { staticClass: "form-group" },
@@ -6080,7 +6028,17 @@ var render = function() {
                   _c("label", [_vm._v("Terms and Conditions")]),
                   _vm._v(" "),
                   _c("tiny-mce", {
-                    attrs: { value: _vm.form.terms_and_conditions }
+                    attrs: {
+                      id: "terms_and_conditions",
+                      value: _vm.form.terms_and_conditions
+                    },
+                    model: {
+                      value: _vm.form.terms_and_conditions,
+                      callback: function($$v) {
+                        _vm.$set(_vm.form, "terms_and_conditions", $$v)
+                      },
+                      expression: "form.terms_and_conditions"
+                    }
                   }),
                   _vm._v(" "),
                   _vm.errors.terms_and_conditions
