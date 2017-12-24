@@ -13,10 +13,11 @@
 
 
 Route::get('/', function () {
-   // \Debugbar::disable();
+    // \Debugbar::disable();
     return view('welcome');
 });
 
+Route::post('/api/upload/image', 'UploadController@image');
 Route::get('/api/customers', 'CustomerController@search');
 Route::get('/api/products', 'ProductsController@search');
 

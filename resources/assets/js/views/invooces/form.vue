@@ -139,7 +139,14 @@
                 <div class="col-12">
                     <div class="form-group">
                         <label>Terms and Conditions</label>
+
+                        <!--
                         <textarea class="form-control" v-model="form.terms_and_conditions"></textarea>
+                        <typeahead :url="productURL" :initialize="item.product" @input="onProduct(index, $event)"></typeahead>
+                        -->
+
+                        <tiny-mce :value="form.terms_and_conditions" ></tiny-mce>
+
                         <small class="error-control" v-if="errors.terms_and_conditions">
                             {{ errors.terms_and_conditions[0] }}
                         </small>
@@ -161,6 +168,7 @@
     import Vue from 'vue'
     import {get, byMethod} from '../../lib/api'
     import {Typeahead} from '../../components/typeahead'
+    import {TinyMce} from '../../components/tinymce'
 
     function initialize(to) {
         let urls = {
@@ -171,7 +179,7 @@
     }
 
     export default {
-        components: {Typeahead},
+        components: {Typeahead, TinyMce},
         data() {
             return {
                 form: {},
@@ -183,7 +191,7 @@
                 method: 'POST',
                 title: 'Create',
                 productURL: '/api/products',
-                customerUrl: '/api/customers'
+                customerUrl: '/api/customers',
             }
         },
         beforeRouteEnter(to, from, next) {
